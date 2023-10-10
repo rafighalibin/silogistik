@@ -1,9 +1,6 @@
 package apap.ti.silogistik2106751354.model;
 
-import java.math.BigInteger;
 import java.sql.Date;
-
-import org.checkerframework.checker.units.qual.C;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +23,6 @@ import lombok.Setter;
 public class Karyawan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // TODO: Change to BigInteger
     private Long id;
 
     @NotNull

@@ -3,8 +3,7 @@ package apap.ti.silogistik2106751354.model;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.checkerframework.checker.units.qual.C;
-
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.*;
@@ -33,13 +32,13 @@ public class Barang {
     private String merk;
 
     @NotNull
-    @Size(max = 20)
     @Column(name = "harga_barang", nullable = false)
-    private BigInteger harga_barang;
+    private Long harga_barang;
 
     @OneToMany(mappedBy = "SKUBarang", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GudangBarang> listGudangBarang;
 
     @OneToMany(mappedBy = "SKUBarang", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PermintaanPengirimanBarang> listPermintaanPengiriman;
+
 }

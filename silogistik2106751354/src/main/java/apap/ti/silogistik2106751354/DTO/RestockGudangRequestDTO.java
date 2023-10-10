@@ -1,7 +1,8 @@
-package apap.ti.silogistik2106751354.model;
+package apap.ti.silogistik2106751354.DTO;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,28 +12,22 @@ import lombok.Setter;
 
 import java.util.List;
 
+import apap.ti.silogistik2106751354.model.GudangBarang;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "gudang")
-public class Gudang {
+public class RestockGudangRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotBlank
     private Long id;
 
-    @NotNull
-    @Size(max = 255)
-    @Column(name = "nama", nullable = false)
+    @NotBlank
     private String nama;
 
-    @NotNull
-    @Size(max = 255)
-    @Column(name = "alamat_gudang", nullable = false)
+    @NotBlank
     private String alamat_gudang;
 
-    @OneToMany(mappedBy = "idGudang", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GudangBarang> listBarang;
 }
