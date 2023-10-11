@@ -15,4 +15,10 @@ public interface GudangBarangDb extends JpaRepository<GudangBarang, Long> {
 
     GudangBarang findBySKUBarangAndIdGudang(Barang barang, Gudang gudang);
 
+    void deleteAllByIdGudang(Gudang gudang);
+
+    void deleteAllById(Long valueOf);
+
+    List<GudangBarang> findAllByIdGudang(Gudang gudang);
+
 }

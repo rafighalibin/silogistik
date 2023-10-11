@@ -9,6 +9,8 @@
     <object th:insert="~{fragments/common :: js}" th:remove="tag"></object>
     <object th:insert="~{fragments/common :: css}" th:remove="tag"></object>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <title>Home</title>
   </head>
 
   <body>
@@ -32,7 +34,7 @@
         <ul class="navbar-nav mr-auto">
           <li
             class="nav-item dropdown"
-            th:classappend="${activeSection == 'gudang'} ? 'active fw-bold' : ''"
+            th:classappend="${activeSection == 'Gudang'} ? 'active fw-bold' : ''"
           >
             <a
               class="nav-link dropdown-toggle text-light"
@@ -57,13 +59,13 @@
           </li>
           <li
             class="nav-item"
-            th:classappend="${activeSection == 'barang'} ? 'active fw-bold' : ''"
+            th:classappend="${activeSection == 'Barang'} ? 'active fw-bold' : ''"
           >
             <a class="nav-link text-light" th:href="@{/barang}">Barang</a>
           </li>
           <li
             class="nav-item"
-            th:classappend="${activeSection == 'permintaanPengiriman'} ? 'active fw-bold' : ''"
+            th:classappend="${activeSection == 'PermintaanPengiriman'} ? 'active fw-bold' : ''"
           >
             <a class="nav-link text-light" th:href="@{/permintaan-pengiriman} "
               >Permintaan Pengiriman</a
@@ -71,9 +73,11 @@
           </li>
           <li
             class="nav-item"
-            th:classappend="${activeSection == 'penulis'} ? 'active fw-bold' : ''"
+            th:classappend="${activeSection == 'Bonus'} ? 'active fw-bold' : ''"
           >
-            <a class="nav-link text-light" th:href="@{/penulis/viewall}"
+            <a
+              class="nav-link text-light"
+              th:href="@{/filter-permintaan-pengiriman}"
               >Bonus</a
             >
           </li>

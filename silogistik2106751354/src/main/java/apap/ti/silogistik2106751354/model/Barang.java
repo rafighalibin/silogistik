@@ -1,11 +1,8 @@
 package apap.ti.silogistik2106751354.model;
 
-import java.math.BigInteger;
 import java.util.List;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

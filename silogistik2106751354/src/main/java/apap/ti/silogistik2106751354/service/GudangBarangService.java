@@ -14,6 +14,6 @@ public interface GudangBarangService {
 
     List<GudangBarang> getGudangBarangByBarang(Barang barang);
 
-    void updateGudangBarang(GudangBarang gudangBarang);
+    void addGudangBarang(GudangBarang gudangBarang);
 
 }

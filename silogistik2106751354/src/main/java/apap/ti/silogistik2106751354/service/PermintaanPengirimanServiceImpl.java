@@ -1,16 +1,19 @@
 package apap.ti.silogistik2106751354.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import apap.ti.silogistik2106751354.model.Barang;
 import apap.ti.silogistik2106751354.model.PermintaanPengiriman;
 import apap.ti.silogistik2106751354.model.PermintaanPengirimanBarang;
+import apap.ti.silogistik2106751354.repository.BarangDb;
+import apap.ti.silogistik2106751354.repository.PermintaanPengirimanBarangDb;
 import apap.ti.silogistik2106751354.repository.PermintaanPengirimanDb;
 
 @Service
@@ -19,39 +22,68 @@ public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanServ
     @Autowired
     PermintaanPengirimanDb permintaanPengirimanDb;
 
+    @Autowired
+    PermintaanPengirimanBarangDb permintaanPengirimanBarangDb;
+
+    @Autowired
+    BarangDb barangDb;
+
     @Override
     public List<PermintaanPengiriman> getAllPermintaanPengiriman() {
         return permintaanPengirimanDb.findAll();
     }
 
     @Override
+    public List<PermintaanPengiriman> getPermintaanPengirimanByStatus(boolean isCancelled) {
+        List<PermintaanPengiriman> result = permintaanPengirimanDb.findByIsCancelled(isCancelled);
+        result.sort(
+                (PermintaanPengiriman p1, PermintaanPengiriman p2) -> p2.getWaktu_permintaan()
+                        .compareTo(p1.getWaktu_permintaan()));
+
+        return result;
+    }
+
+    @Override
     public void addPermintaanPengiriman(PermintaanPengiriman permintaanPengiriman) {
 
-        // Generate a unique shipment number
         String shipmentNumber;
         do {
             shipmentNumber = generateUniqueShipmentNumber(permintaanPengiriman);
         } while (!isShipmentNumberUnique(shipmentNumber));
 
-        // Set the generated shipment number and other properties
         permintaanPengiriman.setNomor_pengiriman(shipmentNumber);
         permintaanPengiriman.setWaktu_permintaan(LocalDateTime.now());
         permintaanPengirimanDb.save(permintaanPengiriman);
 
+        List<String> addedBarang = new ArrayList<String>();
+
         for (PermintaanPengirimanBarang permintaanPengirimanBarang : permintaanPengiriman.getListBarang()) {
-            permintaanPengirimanBarang.setIdPermintaanPengiriman(permintaanPengiriman);
-            permintaanPengirimanDb.save(permintaanPengiriman);
+            Barang barang = barangDb.findBySKU(permintaanPengirimanBarang.getSKUBarang().getSKU());
+            if (addedBarang.contains(barang.getSKU())) {
+                PermintaanPengirimanBarang targePermintaanPengirimanBarang = permintaanPengirimanBarangDb
+                        .findByIdPermintaanPengirimanAndSKUBarang(permintaanPengiriman, barang);
+                targePermintaanPengirimanBarang.setKuantitas(
+                        targePermintaanPengirimanBarang.getKuantitas() + permintaanPengirimanBarang.getKuantitas());
+                permintaanPengirimanBarangDb.save(targePermintaanPengirimanBarang);
+            } else {
+                permintaanPengirimanBarang.setSKUBarang(barang);
+                permintaanPengirimanBarang.setIdPermintaanPengiriman(permintaanPengiriman);
+                permintaanPengirimanBarangDb.save(permintaanPengirimanBarang);
+                addedBarang.add(barang.getSKU());
+            }
+
         }
+
     }
 
     private String generateUniqueShipmentNumber(PermintaanPengiriman permintaanPengiriman) {
-        // Calculate the shipment number based on the specified format
-        // You can use permintaanPengiriman to get the required information
-        // Example: REQ05SAM15:57:22
-        // You may need to adjust this part based on your specific requirements.
-        // For demonstration purposes, I'm using a simple format.
+        long jumlahBarang = 0;
+        for (PermintaanPengirimanBarang permintaanPengirimanBarang : permintaanPengiriman.getListBarang()) {
+            jumlahBarang += permintaanPengirimanBarang.getKuantitas();
+        }
+
         String shipmentNumber = "REQ"
-                + String.format("%02d", permintaanPengiriman.getListBarang().size() % 100)
+                + String.format("%02d", jumlahBarang % 100)
                 + getJenisLayananCode(permintaanPengiriman.getJenis_layanan())
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -59,15 +91,18 @@ public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanServ
     }
 
     private String getJenisLayananCode(int jenisLayanan) {
-        // Map jenis layanan codes to the specified values (1 = SAM, 2 = KIL, etc.)
-        // You may need to adjust this mapping based on your specific values.
-        Map<Integer, String> jenisLayananMap = new HashMap<>();
-        jenisLayananMap.put(1, "SAM");
-        jenisLayananMap.put(2, "KIL");
-        jenisLayananMap.put(3, "REG");
-        jenisLayananMap.put(4, "HEM");
-
-        return jenisLayananMap.getOrDefault(jenisLayanan, "UNK"); // Default to "UNK" for unknown values
+        switch (jenisLayanan) {
+            case 1:
+                return "SAM";
+            case 2:
+                return "KIL";
+            case 3:
+                return "REG";
+            case 4:
+                return "HEM";
+            default:
+                return "UNK"; // Unknown
+        }
     }
 
     private boolean isShipmentNumberUnique(String shipmentNumber) {
@@ -81,7 +116,41 @@ public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanServ
 
     @Override
     public void cancelPermintaanPengiriman(PermintaanPengiriman permintaanPengiriman) {
-        permintaanPengirimanDb.findById(permintaanPengiriman.getId()).get().setIs_cancelled(true);
+        permintaanPengirimanDb.findById(permintaanPengiriman.getId()).get().setIsCancelled(true);
         permintaanPengirimanDb.save(permintaanPengiriman);
     }
+
+    @Override
+    public List<PermintaanPengiriman> getPermintaanPengirimanByFilter(String SKU, LocalDate startDate,
+            LocalDate endDate) {
+        List<PermintaanPengirimanBarang> permintaanBarang = new ArrayList<PermintaanPengirimanBarang>();
+
+        permintaanBarang = permintaanPengirimanBarangDb.findAll();
+
+        if (SKU != "") {
+            Barang barang = barangDb.findBySKU(SKU);
+            permintaanBarang = permintaanPengirimanBarangDb.findAllBySKUBarang(barang);
+        }
+
+        List<PermintaanPengiriman> result = new ArrayList<PermintaanPengiriman>();
+        if (startDate != null || endDate != null) {
+            startDate = startDate == null ? LocalDate.of(1900, 1, 1) : startDate;
+            endDate = endDate == null ? LocalDate.now().plusDays(1) : endDate;
+            for (PermintaanPengirimanBarang permintaanPengirimanBarang : permintaanBarang) {
+                PermintaanPengiriman permintaanPengiriman = permintaanPengirimanBarang.getIdPermintaanPengiriman();
+                if (permintaanPengiriman.getWaktu_permintaan().toLocalDate().isAfter(startDate)
+                        && permintaanPengiriman.getWaktu_permintaan().toLocalDate().isBefore(endDate)) {
+                    result.add(permintaanPengiriman);
+                }
+
+            }
+        } else {
+            for (PermintaanPengirimanBarang permintaanPengirimanBarang : permintaanBarang) {
+                result.add(permintaanPengirimanBarang.getIdPermintaanPengiriman());
+            }
+        }
+
+        return result;
+    }
+
 }

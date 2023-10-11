@@ -28,7 +28,7 @@
       rel="stylesheet"
       href="https://cdn.datatables.net/1.11.7/css/dataTables.bootstrap5.min.css"
     />
-    <title>Detail Gudang</title>
+    <title>Detail Barang</title>
   </head>
 
   <body>
@@ -47,7 +47,7 @@
               <div th:if="${message}" class="alert alert-success">
                 <span th:text="${message}"></span>
               </div>
-              <div class="col-6 text-right">
+              <div class="col-6 text-end">
                 <a
                   th:href="@{'/barang/' + ${barang.SKU}} + '/ubah'"
                   class="btn btn-primary"

@@ -1,5 +1,6 @@
 package apap.ti.silogistik2106751354.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import apap.ti.silogistik2106751354.DTO.BarangMapper;
 import apap.ti.silogistik2106751354.DTO.CreateBarangRequestDTO;
 import apap.ti.silogistik2106751354.DTO.UpdateBarangRequestDTO;
+import apap.ti.silogistik2106751354.DTO.ViewBarangRequestDTO;
 import apap.ti.silogistik2106751354.model.Barang;
-import apap.ti.silogistik2106751354.model.Gudang;
 import apap.ti.silogistik2106751354.model.GudangBarang;
 import apap.ti.silogistik2106751354.service.BarangService;
 import apap.ti.silogistik2106751354.service.GudangBarangService;
-import apap.ti.silogistik2106751354.service.GudangService;
 import jakarta.validation.Valid;
 
 @Controller
 public class BarangController {
-    @Autowired
-    private GudangService gudangService;
 
     @Autowired
     private GudangBarangService gudangBarangService;
@@ -35,9 +33,28 @@ public class BarangController {
     @Autowired
     private BarangMapper barangMapper;
 
+    @GetMapping("/barang")
+    public String viewAllBarang(Model model) {
+        List<Barang> listBarang = barangService.getAllBarang();
+        List<ViewBarangRequestDTO> listBarangDTO = new ArrayList<ViewBarangRequestDTO>();
+
+        for (Barang barang : listBarang) {
+            ViewBarangRequestDTO barangDTO = barangMapper.barangToViewBarangRequestDTO(barang);
+            List<GudangBarang> listGudangBarang = gudangBarangService.getGudangBarangByBarang(barang);
+
+            int stok = 0;
+            for (GudangBarang gudangBarang : listGudangBarang) {
+                stok += gudangBarang.getStok();
+            }
+            barangDTO.setStok(stok);
+            listBarangDTO.add(barangDTO);
+        }
+        model.addAttribute("listBarang", listBarangDTO);
+        return "view-all-barang";
+    }
+
     @GetMapping("/barang/tambah")
     public String formAddBarang(Model model) {
-        String message;
 
         CreateBarangRequestDTO barangDTO = new CreateBarangRequestDTO();
 
@@ -58,9 +75,10 @@ public class BarangController {
         } else {
             Barang barang = barangService.createBarang(barangDTO);
             barangService.addBarang(barang);
-            // TODO: change the DTO when success
+            barangDTO = new CreateBarangRequestDTO();
+
             model.addAttribute("barangDTO", barangDTO);
-            model.addAttribute("message", "Barang berhasil ditambahkan!");
+            model.addAttribute("message", "Barang " + barang.getMerk() + " berhasilditambahkan!");
             return "form-add-barang";
 
         }
@@ -81,10 +99,11 @@ public class BarangController {
     public String formUpdateBarang(
             @ModelAttribute("idBarang") String idBarang,
             Model model) {
-        // TODO: insert text tipe barang
         Barang barang = barangService.getBarangBySKU(idBarang);
         UpdateBarangRequestDTO barangDTO = barangMapper.barangToUpdateBarangRequestDTO(barang);
         model.addAttribute("barangDTO", barangDTO);
+        model.addAttribute("opsiTipe", barangDTO.getOpsiTipe());
+
         return "form-update-barang";
     }
 
@@ -105,7 +124,6 @@ public class BarangController {
             model.addAttribute("barangDTO", barangDTO);
             model.addAttribute("message", "Barang berhasil diubah!");
             return "form-update-barang";
-
         }
     }
 }

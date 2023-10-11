@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import apap.ti.silogistik2106751354.model.Gudang;
 import apap.ti.silogistik2106751354.model.Karyawan;
 
 @Service

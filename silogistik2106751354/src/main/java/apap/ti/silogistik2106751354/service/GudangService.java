@@ -19,4 +19,6 @@ public interface GudangService {
 
     Gudang restockBarang(Barang barang, Integer jumlahBarang, Gudang gudang);
 
+    void updateGudangBarang(Long idGudang, List<GudangBarang> listGudangBarang);
+
 }

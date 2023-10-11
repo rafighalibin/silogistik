@@ -67,16 +67,14 @@
           <tbody>
             <tr th:each="gudangBarang, iterationStatus : ${listGudangBarang}">
               <td th:text="${iterationStatus.index + 1}"></td>
-              <td th:text="${gudangBarang.idGudang.nama}"></td>
-              <td th:text="${gudangBarang.idGudang.alamat_gudang}"></td>
               <td>
                 <a
-                  type="button"
-                  class="btn btn-sm btn-primary"
                   th:href="@{/gudang/{id}(id=${gudangBarang.idGudang.id})}"
-                  >Detail</a
-                >
+                  th:text="${gudangBarang.idGudang.nama}"
+                ></a>
               </td>
+              <td th:text="${gudangBarang.idGudang.alamat_gudang}"></td>
+              <td th:text="${gudangBarang.stok}"></td>
             </tr>
           </tbody>
         </table>

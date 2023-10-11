@@ -2,7 +2,6 @@ package apap.ti.silogistik2106751354.service;
 
 import java.util.List;
 
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

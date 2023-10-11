@@ -45,11 +45,13 @@
                 <h2>Detail Gudang</h2>
               </div>
               <div class="col-6 text-right">
-                <a
-                  th:href="@{'/gudang/' + ${gudang.id}} + '/restock-barang'"
-                  class="btn btn-primary"
-                  >Restock Barang</a
-                >
+                <div class="d-flex justify-content-end">
+                  <a
+                    th:href="@{'/gudang/' + ${gudang.id}} + '/restock-barang'"
+                    class="btn btn-primary"
+                    >Restock Barang</a
+                  >
+                </div>
               </div>
             </div>
 

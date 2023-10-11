@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
@@ -110,11 +109,11 @@ public class GudangController {
 
         List<GudangBarang> listGudangBarang = restockDTO.getListBarang();
 
-        for (GudangBarang gudangBarang : listGudangBarang) {
-            gudangBarang.setId(idGudang);
-            gudangBarangService.updateGudangBarang(gudangBarang);
-        }
+        gudangService.updateGudangBarang(idGudang, listGudangBarang);
+
         List<Barang> listBarang = barangService.getAllBarang();
+        restockDTO = gudangMapper
+                .gudangToRestockGudangRequestDTO(gudangService.getGudangById(idGudang));
 
         model.addAttribute("listBarangExisting", listBarang);
         model.addAttribute("restockDTO", restockDTO);
