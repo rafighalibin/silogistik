@@ -19,7 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreatePermintaanPengirimanRequestDTO {
 
-    private Boolean is_cancelled = false;
+    private Boolean isCancelled = false;
 
     @NotBlank
     private String nama_penerima;

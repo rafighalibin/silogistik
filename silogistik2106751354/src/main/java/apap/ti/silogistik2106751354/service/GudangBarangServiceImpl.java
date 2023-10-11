@@ -1,13 +1,11 @@
 package apap.ti.silogistik2106751354.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import apap.ti.silogistik2106751354.model.Barang;
-import apap.ti.silogistik2106751354.model.Gudang;
 import apap.ti.silogistik2106751354.model.GudangBarang;
 import apap.ti.silogistik2106751354.repository.GudangBarangDb;
 import apap.ti.silogistik2106751354.repository.GudangDb;

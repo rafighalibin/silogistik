@@ -35,6 +35,9 @@
             <div th:if="${message}" class="alert alert-success">
               <span th:text="${message}"></span>
             </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+              <span th:text="${errorMessage}"></span>
+            </div>
             <form
               th:action="@{'/permintaan-pengiriman/tambah'}"
               th:object="${permintaanDTO}"
@@ -100,9 +103,9 @@
                         class="form-control"
                         id="jenis_layanan"
                         th:field="*{jenis_layanan}"
-                        required="required"
+                        required
                       >
-                        <!-- TODO: -->
+                        <option value="0" selected>Select Jenis Layanan</option>
                         <option
                           th:each="entry : ${permintaanDTO.opsiJenisLayanan.entrySet()}"
                           th:value="${entry.key}"

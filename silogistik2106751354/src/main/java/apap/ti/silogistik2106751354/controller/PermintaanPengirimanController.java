@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +23,6 @@ import apap.ti.silogistik2106751354.model.PermintaanPengiriman;
 import apap.ti.silogistik2106751354.model.PermintaanPengirimanBarang;
 import apap.ti.silogistik2106751354.service.BarangService;
 import apap.ti.silogistik2106751354.service.KaryawanService;
-import apap.ti.silogistik2106751354.service.PermintaanPengirimanBarangService;
 import apap.ti.silogistik2106751354.service.PermintaanPengirimanService;
 import jakarta.validation.Valid;
 
@@ -39,8 +37,6 @@ public class PermintaanPengirimanController {
 
     @Autowired
     private KaryawanService karyawanService;
-    @Autowired
-    private PermintaanPengirimanBarangService permintaanPengirimanBarangService;
 
     @Autowired
     private PermintaanPengirimanMapper permintaanPengirimanMapper;
@@ -99,7 +95,6 @@ public class PermintaanPengirimanController {
     private String formPermintaanPengiriman(Model model) {
         CreatePermintaanPengirimanRequestDTO permintaanDTO = new CreatePermintaanPengirimanRequestDTO();
 
-        // TODO: fix jenis layanan default value
         model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
         model.addAttribute("listBarangExisting", barangService.getAllBarang());
         model.addAttribute("permintaanDTO", permintaanDTO);
@@ -123,6 +118,28 @@ public class PermintaanPengirimanController {
             BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             model.addAttribute("message", "Mohon periksa kembali data yang anda masukkan!");
+
+            model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
+            model.addAttribute("listBarangExisting", barangService.getAllBarang());
+            model.addAttribute("permintaanDTO", permintaanDTO);
+
+            return "form-add-permintaan-pengiriman";
+        }
+
+        for (PermintaanPengirimanBarang permintaanBarang : permintaanDTO.getListBarang()) {
+            if (permintaanBarang.getKuantitas() <= 0) {
+                model.addAttribute("errorMessage", "Terjadi kesalahan pada kuantitas barang!");
+
+                model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
+                model.addAttribute("listBarangExisting", barangService.getAllBarang());
+                model.addAttribute("permintaanDTO", permintaanDTO);
+
+                return "form-add-permintaan-pengiriman";
+            }
+        }
+
+        if (permintaanDTO.getJenis_layanan() == 0) {
+            model.addAttribute("errorMessage", "Mohon Masukkan Jenis Layanan!");
 
             model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
             model.addAttribute("listBarangExisting", barangService.getAllBarang());

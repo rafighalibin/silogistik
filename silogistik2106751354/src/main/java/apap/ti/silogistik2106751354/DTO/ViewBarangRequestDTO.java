@@ -1,6 +1,5 @@
 package apap.ti.silogistik2106751354.DTO;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
