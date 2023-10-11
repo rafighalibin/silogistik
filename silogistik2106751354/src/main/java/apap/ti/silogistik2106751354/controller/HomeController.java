@@ -26,7 +26,7 @@ public class HomeController {
 
     @GetMapping("/")
     private String home(Model model) {
-
+        // TODO: fix navbar dropdown
         int gudangCount = gudangService.getAllGudang().size();
         int barangCount = barangService.getAllBarang().size();
         int permintaanPengirimanCount = permintaanPengirimanService.getAllPermintaanPengiriman().size();
