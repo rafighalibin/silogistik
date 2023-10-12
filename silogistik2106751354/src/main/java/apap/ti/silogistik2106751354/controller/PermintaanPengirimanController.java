@@ -43,8 +43,7 @@ public class PermintaanPengirimanController {
 
     @GetMapping("/permintaan-pengiriman")
     private String viewAllPermintaanPengiriman(Model model) {
-        List<PermintaanPengiriman> listPermintaanPengiriman = permintaanPengirimanService
-                .getPermintaanPengirimanByStatus(false);
+        List<PermintaanPengiriman> listPermintaanPengiriman = permintaanPengirimanService.getAllPermintaanPengiriman();
 
         model.addAttribute("listPermintaanPengiriman", listPermintaanPengiriman);
         return "view-all-permintaan-pengiriman";
@@ -57,14 +56,21 @@ public class PermintaanPengirimanController {
             @RequestParam(name = "start-date", required = false) LocalDate startDate,
             @RequestParam(name = "end-date", required = false) LocalDate endDate) {
         List<PermintaanPengiriman> listPermintaanPengiriman = permintaanPengirimanService
-                .getPermintaanPengirimanByStatus(false);
+                .getAllPermintaanPengiriman();
+
+        List<Barang> listBarangExisting = barangService.getAllBarang();
+        if (SKU == null && startDate == null && endDate == null) {
+            model.addAttribute("listBarangExisting", listBarangExisting);
+            model.addAttribute("listPermintaanPengiriman", listPermintaanPengiriman);
+            model.addAttribute("selectedSKU", SKU);
+
+            return "view-all-permintaan-pengiriman-filter";
+        }
 
         if (SKU != null || startDate != null || endDate != null) {
             listPermintaanPengiriman = permintaanPengirimanService.getPermintaanPengirimanByFilter(SKU, startDate,
                     endDate);
         }
-
-        List<Barang> listBarangExisting = barangService.getAllBarang();
 
         if (startDate != null) {
             model.addAttribute("startDate", Date.valueOf(startDate));
@@ -118,7 +124,6 @@ public class PermintaanPengirimanController {
             BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             model.addAttribute("message", "Mohon periksa kembali data yang anda masukkan!");
-
             model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
             model.addAttribute("listBarangExisting", barangService.getAllBarang());
             model.addAttribute("permintaanDTO", permintaanDTO);
@@ -129,7 +134,6 @@ public class PermintaanPengirimanController {
         for (PermintaanPengirimanBarang permintaanBarang : permintaanDTO.getListBarang()) {
             if (permintaanBarang.getKuantitas() <= 0) {
                 model.addAttribute("errorMessage", "Terjadi kesalahan pada kuantitas barang!");
-
                 model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
                 model.addAttribute("listBarangExisting", barangService.getAllBarang());
                 model.addAttribute("permintaanDTO", permintaanDTO);
@@ -140,7 +144,6 @@ public class PermintaanPengirimanController {
 
         if (permintaanDTO.getJenis_layanan() == 0) {
             model.addAttribute("errorMessage", "Mohon Masukkan Jenis Layanan!");
-
             model.addAttribute("listKaryawan", karyawanService.getAllKaryawan());
             model.addAttribute("listBarangExisting", barangService.getAllBarang());
             model.addAttribute("permintaanDTO", permintaanDTO);
@@ -185,7 +188,7 @@ public class PermintaanPengirimanController {
 
         }
 
-        return "view-message-cancle-permintaan-pengiriman";
+        return "view-message-cancel-permintaan-pengiriman";
     }
 
 }

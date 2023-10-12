@@ -26,7 +26,7 @@ public class GudangBarangServiceImpl implements GudangBarangService {
 
     @Override
     public List<GudangBarang> getGudangBarangByBarang(Barang barang) {
-        return gudangBarangDb.findAllBySKUBarang(barang);
+        return gudangBarangDb.findAllBySKUBarangOrderByIdGudang_Nama(barang);
     }
 
     @Override

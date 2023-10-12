@@ -67,6 +67,7 @@ public class GudangController {
         List<GudangBarang> listGudangBarang = gudangBarangService.getGudangBarangByBarang(barang);
 
         model.addAttribute("listGudangBarang", listGudangBarang);
+        model.addAttribute("SKU", sku);
 
         return "view-cari-barang";
     }

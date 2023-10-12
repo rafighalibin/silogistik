@@ -5,100 +5,99 @@
   xmlns:th="http://thymeleaf.org"
 >
   <head>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-
     <meta charset="UTF-8" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-    />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link
       rel="stylesheet"
-      href="https://cdn.datatables.net/1.11.7/css/dataTables.bootstrap5.min.css"
+      href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"
     />
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
     <title>Tambah Barang</title>
   </head>
 
   <body>
     <nav
-      th:replace="~{fragments/navbar :: navbar(activeSection='Gudang')}"
+      th:replace="~{fragments/navbar :: navbar(activeSection='Barang')}"
     ></nav>
-    <div class="container">
-      <div class="text-center pt-5"></div>
+    <div class="container my-5">
       <div class="row justify-content-center">
-        <div class="card" style="width: 50rem">
-          <div class="card-body">
-            <div th:if="${message}" class="alert alert-success">
-              <span th:text="${message}"></span>
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <div class="row align-items-center">
+                <div class="col-6">
+                  <h2 class="m-0">Tambah Barang</h2>
+                </div>
+              </div>
             </div>
-            <div class="row mb-2">
-              <h2 class="text-center">Tambah Barang</h2>
-            </div>
-            <form
-              th:action="@{/barang/tambah}"
-              th:object="${barangDTO}"
-              method="POST"
-            >
-              <div class="form-group">
-                <label for="merk">Merk Barang</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="merk"
-                  th:field="*{merk}"
-                  required
-                />
+            <div class="card-body">
+              <div th:if="${message}" class="alert alert-success">
+                <span th:text="${message}"></span>
               </div>
-              <div class="mb-3"></div>
-              <div class="form-group">
-                <label for="tipe_barang">Tipe Barang :</label>
-                <select
-                  class="form-control"
-                  id="tipe_barang"
-                  th:field="*{tipe_barang}"
-                  required
-                >
-                  <option
-                    th:each="entry : ${barangDTO.opsiTipe.entrySet()}"
-                    th:value="${entry.key}"
-                    th:text="${entry.value}"
-                  ></option>
-                </select>
+              <div th:if="${errormessage}" class="alert alert-danger">
+                <span th:text="${errormessage}"></span>
               </div>
-              <div class="mb-3"></div>
-              <div class="form-group">
-                <label for="harga_barang">Harga Barang:</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="harga_barang"
-                  th:field="*{harga_barang}"
-                  min="1"
-                  required
-                />
-              </div>
-              <div class="mb-3"></div>
-              <button class="btn btn-primary" type="submit">Simpan</button>
-              <button
-                class="btn btn-danger"
-                type="button"
-                onclick="window.history.back();"
+              <form
+                th:action="@{/barang/tambah}"
+                th:object="${barangDTO}"
+                method="POST"
               >
-                Kembali
-              </button>
-            </form>
+                <div class="mb-3">
+                  <label for="merk">Merk Barang</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="merk"
+                    th:field="*{merk}"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="tipe_barang">Tipe Barang:</label>
+                  <select
+                    class="form-select"
+                    id="tipe_barang"
+                    th:field="*{tipe_barang}"
+                    required
+                  >
+                    <option value="0">Pilih tipe</option>
+                    <option
+                      th:each="entry : ${barangDTO.opsiTipe.entrySet()}"
+                      th:value="${entry.key}"
+                      th:text="${entry.value}"
+                    ></option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="harga_barang">Harga Barang:</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="harga_barang"
+                    th:field="*{harga_barang}"
+                    min="1"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <button class="btn btn-primary" type="submit">Simpan</button>
+                  <button
+                    class="btn btn-danger"
+                    type="button"
+                    onclick="window.history.back();"
+                  >
+                    Kembali
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

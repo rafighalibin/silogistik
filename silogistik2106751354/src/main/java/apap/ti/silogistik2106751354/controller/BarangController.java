@@ -67,8 +67,15 @@ public class BarangController {
             @Valid @ModelAttribute("barangDTO") CreateBarangRequestDTO barangDTO,
             BindingResult bindingResult,
             Model model) {
+
+        if (barangDTO.getTipe_barang() == 0) {
+            model.addAttribute("errormessage", "Mohon pilih tipe barang!");
+            model.addAttribute("barangDTO", barangDTO);
+
+            return "form-add-barang";
+        }
         if (bindingResult.hasFieldErrors()) {
-            model.addAttribute("message", "Mohon periksa kembali data yang anda masukkan!");
+            model.addAttribute("errormessage", "Mohon periksa kembali data yang anda masukkan!");
             model.addAttribute("barangDTO", barangDTO);
 
             return "form-add-barang";

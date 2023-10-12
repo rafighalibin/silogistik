@@ -134,8 +134,8 @@ public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanServ
 
         List<PermintaanPengiriman> result = new ArrayList<PermintaanPengiriman>();
         if (startDate != null || endDate != null) {
-            startDate = startDate == null ? LocalDate.of(1900, 1, 1) : startDate;
-            endDate = endDate == null ? LocalDate.now().plusDays(1) : endDate;
+            startDate = startDate == null ? LocalDate.of(1900, 1, 1) : startDate.minusDays(1);
+            endDate = endDate == null ? LocalDate.now().plusDays(1) : endDate.plusDays(1);
             for (PermintaanPengirimanBarang permintaanPengirimanBarang : permintaanBarang) {
                 PermintaanPengiriman permintaanPengiriman = permintaanPengirimanBarang.getIdPermintaanPengiriman();
                 if (permintaanPengiriman.getWaktu_permintaan().toLocalDate().isAfter(startDate)

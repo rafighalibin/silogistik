@@ -48,7 +48,7 @@ public class Silogistik2106751354Application {
 		return args -> {
 			var faker = new Faker(new Locale("ID"));
 
-			int dataAmount = 1;
+			int dataAmount = 10;
 			// Generate dummy data for Gudang
 			for (int i = 0; i < dataAmount; i++) {
 				Gudang gudang = new Gudang();
@@ -71,7 +71,7 @@ public class Silogistik2106751354Application {
 			}
 
 			// Generate dummy data for Barang
-			for (int i = 0; i < dataAmount; i++) {
+			for (int i = 0; i < dataAmount - 3; i++) {
 				CreateBarangRequestDTO createBarangRequestDTO = new CreateBarangRequestDTO();
 				createBarangRequestDTO.setMerk(faker.commerce().productName());
 				createBarangRequestDTO.setTipe_barang(faker.number().numberBetween(1, 5));
@@ -82,7 +82,7 @@ public class Silogistik2106751354Application {
 			}
 
 			// Generate dummy data for Gudang Barang
-			for (int i = 0; i < dataAmount; i++) {
+			for (int i = 0; i < dataAmount * 5; i++) {
 				List<Barang> listBarang = barangService.getAllBarang();
 				List<Gudang> listGudang = gudangService.getAllGudang();
 
@@ -95,7 +95,7 @@ public class Silogistik2106751354Application {
 			}
 
 			// Generate dummy data for Permintaan Pengiriman
-			for (int i = 0; i < dataAmount; i++) {
+			for (int i = 0; i < dataAmount * 5; i++) {
 				List<Karyawan> listKaryawan = karyawanService.getAllKaryawan();
 				List<Barang> listBarang = barangService.getAllBarang();
 
@@ -117,7 +117,6 @@ public class Silogistik2106751354Application {
 					permintaanPengirimanBarang.setKuantitas(faker.number().numberBetween(1, 100));
 					createPermintaanPengirimanRequestDTO.getListBarang().add(permintaanPengirimanBarang);
 				}
-
 				PermintaanPengiriman permintaanPengiriman = permintaanPengirimanMapper
 						.createPermintaanPengirimanRequestDTOToPermintaanPengiriman(
 								createPermintaanPengirimanRequestDTO);

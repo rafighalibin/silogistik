@@ -21,4 +21,6 @@ public interface GudangBarangDb extends JpaRepository<GudangBarang, Long> {
 
     List<GudangBarang> findAllByIdGudang(Gudang gudang);
 
+    List<GudangBarang> findAllBySKUBarangOrderByIdGudang_Nama(Barang barang);
+
 }

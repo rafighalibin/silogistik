@@ -5,167 +5,160 @@
   xmlns:th="http://thymeleaf.org"
 >
   <head>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-
     <meta charset="UTF-8" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-    />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link
       rel="stylesheet"
-      href="https://cdn.datatables.net/1.11.7/css/dataTables.bootstrap5.min.css"
+      href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"
     />
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
     <title>Detail Permintaan Pengiriman</title>
   </head>
-
   <body>
     <nav
       th:replace="~{fragments/navbar :: navbar(activeSection='PermintaanPengiriman')}"
     ></nav>
-    <div class="container">
-      <div class="text-center pt-5"></div>
-      <div class="row justify-content-center">
-        <div class="card" style="width: 50rem">
-          <div class="card-body">
-            <div class="row mb-2">
-              <div class="col-6">
-                <h2>Detail Permintaan Pengiriman</h2>
-              </div>
-              <div class="col-6 text-end">
-                <a
-                  th:href="@{'/permintaan-pengiriman/' + ${permintaanPengiriman.id}} + '/cancel'"
-                  class="btn btn-danger"
-                  >Cancel Permintaan</a
-                >
-              </div>
+    <div class="container mt-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <div class="row align-items-center">
+            <div class="col-6">
+              <h2 class="m-0">Detail Permintaan Pengiriman</h2>
             </div>
 
-            <div>
-              <p class="card-text m-0">
-                <b>No. Permintaan Pengiriman:</b>
-                <span th:text="${permintaanPengiriman.nomor_pengiriman}"></span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Waktu Permintaan:</b>
+            <div class="col-6 text-end">
+              <a
+                th:if="${!permintaanPengiriman.isCancelled}"
+                th:href="@{'/permintaan-pengiriman/' + ${permintaanPengiriman.id}} + '/cancel'"
+                class="btn btn-danger"
+                >Cancel Permintaan</a
+              ><a
+                th:if="${permintaanPengiriman.isCancelled}"
+                class="btn btn-danger"
+                disabled
+                >Permintaan Telah Dibatalkan</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mb-4">
+            <table class="table table-borderless">
+              <tr>
+                <td><b>No. Permintaan Pengiriman:</b></td>
+                <td>
+                  <span
+                    th:text="${permintaanPengiriman.nomor_pengiriman}"
+                  ></span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Waktu Permintaan:</b></td>
+                <td>
+                  <span
+                    th:text="${#temporals.format(permintaanPengiriman.waktu_permintaan, 'dd-MM-yyyy HH:mm:ss')}"
+                  ></span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Karyawan Bertugas:</b></td>
+                <td>
+                  <span th:text="${permintaanPengiriman.karyawan.nama}"></span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Waktu Pengiriman:</b></td>
+                <td>
+                  <span
+                    th:text="${permintaanPengiriman.tanggal_pengiriman}"
+                  ></span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Nama Penerima:</b></td>
+                <td>
+                  <span th:text="${permintaanPengiriman.nama_penerima}"></span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Alamat Penerima:</b></td>
+                <td>
+                  <span
+                    th:text="${permintaanPengiriman.alamat_penerima}"
+                  ></span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Jenis Layanan:</b></td>
+                <td>
+                  <span th:switch="${permintaanPengiriman.jenis_layanan}">
+                    <span th:case="'1'">Same Day</span>
+                    <span th:case="'2'">Kilat</span>
+                    <span th:case="'3'">Reguler</span>
+                    <span th:case="'4'">Hemat</span>
+                    <span th:case="*">Other</span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Biaya Pengiriman:</b></td>
+                <td>
+                  <span
+                    th:text="${permintaanPengiriman.biaya_pengiriman}"
+                  ></span>
+                </td>
+              </tr>
+            </table>
+          </div>
 
-                <span
-                  th:text="${#temporals.format(permintaanPengiriman.waktu_permintaan, 'dd-MM-yyyy HH:mm:ss')}"
-                ></span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Karyawan Bertugas:</b>
-                <span th:text="${permintaanPengiriman.karyawan.nama}"></span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Waktu Pengiriman:</b>
-                <span
-                  th:text="${permintaanPengiriman.tanggal_pengiriman}"
-                ></span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Nama Penerima:</b>
-                <span th:text="${permintaanPengiriman.nama_penerima}"></span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Alamat Penerima:</b>
-                <span th:text="${permintaanPengiriman.alamat_penerima}"></span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Jenis Layanan:</b>
-                <span th:switch="${permintaanPengiriman.jenis_layanan}">
-                  <span th:case="'1'">Same Day</span>
-                  <span th:case="'2'">Kilat</span>
-                  <span th:case="'3'">Reguler</span>
-                  <span th:case="'4'">Hemat</span>
-                  <span th:case="*">Other</span>
-                </span>
-              </p>
-              <br />
-              <p class="card-text m-0">
-                <b>Biaya Pengiriman:</b>
-                <span th:text="${permintaanPengiriman.biaya_pengiriman}"></span>
-              </p>
-              <br />
-
-              <div class="table-responsive">
-                <table
-                  id="gudangTable"
-                  class="table table-striped table-bordered text-center"
+          <div class="table-responsive">
+            <table
+              id="gudangTable"
+              class="table table-striped table-bordered text-center"
+            >
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>SKU</th>
+                  <th>Merk</th>
+                  <th>Kuantitas</th>
+                  <th>Total Harga</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:each="permintaanPengirimanBarang, iterationStatus : ${permintaanPengiriman.listBarang}"
                 >
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>SKU</th>
-                      <th>Merk</th>
-                      <th>Kuantitas</th>
-                      <th>Total Harga</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      th:each="permintaanPengirimanBarang, iterationStatus : ${permintaanPengiriman.listBarang}"
+                  <td th:text="${iterationStatus.index + 1}"></td>
+                  <td>
+                    <a
+                      th:href="@{'/barang/' + ${permintaanPengirimanBarang.SKUBarang.SKU}}"
                     >
-                      <td th:text="${iterationStatus.index + 1}"></td>
-                      <td>
-                        <a
-                          th:href="@{'/barang/' + ${permintaanPengirimanBarang.SKUBarang.SKU}}"
-                        >
-                          <span
-                            th:text="${permintaanPengirimanBarang.SKUBarang.SKU}"
-                          ></span>
-                        </a>
-                      </td>
-                      <td
-                        th:text="${permintaanPengirimanBarang.SKUBarang.merk}"
-                      ></td>
-                      <td
-                        th:text="${permintaanPengirimanBarang.kuantitas}"
-                      ></td>
-                      <td
-                        th:text="${permintaanPengirimanBarang.kuantitas * permintaanPengirimanBarang.SKUBarang.harga_barang}"
-                      ></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                      <span
+                        th:text="${permintaanPengirimanBarang.SKUBarang.SKU}"
+                      ></span>
+                    </a>
+                  </td>
+                  <td
+                    th:text="${permintaanPengirimanBarang.SKUBarang.merk}"
+                  ></td>
+                  <td th:text="${permintaanPengirimanBarang.kuantitas}"></td>
+                  <td
+                    th:text="${permintaanPengirimanBarang.kuantitas * permintaanPengirimanBarang.SKUBarang.harga_barang}"
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
-
-    <script src="https://cdn.datatables.net/1.11.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.7/js/dataTables.bootstrap5.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $("#gudangTable").DataTable({
-          columnDefs: [
-            {
-              targets: -1,
-              orderable: false,
-            },
-          ],
-        });
-      });
-    </script>
   </body>
 </html>

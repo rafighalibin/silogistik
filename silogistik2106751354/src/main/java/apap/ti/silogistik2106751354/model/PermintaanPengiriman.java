@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -28,6 +29,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+// @SQLDelete(sql = "UPDATE permintaan_pengiriman SET is_cancelled = true WHERE
+// id=?")
 @Table(name = "permintaan_pengiriman")
 public class PermintaanPengiriman {
     @Id
